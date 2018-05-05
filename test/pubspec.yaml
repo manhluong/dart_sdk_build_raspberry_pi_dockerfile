@@ -1,0 +1,4 @@
+name: dart_tests
+dependencies:
+  http: any
+
