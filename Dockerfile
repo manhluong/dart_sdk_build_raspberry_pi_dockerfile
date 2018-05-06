@@ -7,8 +7,7 @@
 FROM debian:stretch
 LABEL maintainer="Luong Bui"
 
-RUN apt-get update
-RUN apt-get -y install g++-multilib git python curl build-essential debhelper zip
+RUN apt-get update && apt-get -y install g++-multilib git python curl build-essential debhelper zip
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 ENV PATH="/depot_tools:${PATH}"
