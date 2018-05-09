@@ -14,6 +14,8 @@ docker build --build-arg dart_version=VERSION .
 
 Bear in mind that I made this Dockerfile mainly to build 1.24.3 which is the last known version for me that is buildable for armv6.
 
+It is recommended to increase the available memory of Docker to 3 GB.
+
 ## How to retrieve the built dart sdk
 
 The created image will contain a zip file with the dart binaries. The zip file will be at the root (/) folder of the image.
