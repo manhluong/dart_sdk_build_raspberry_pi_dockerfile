@@ -1,13 +1,11 @@
 ############################################################
 # Dockerfile to build dart-sdk
 # https://github.com/dart-lang/sdk
-#
-# Based on Debian
 ############################################################
 FROM debian:stretch
 LABEL maintainer="Luong Bui"
 
-RUN apt-get update && apt-get -y install g++-multilib git python curl build-essential debhelper zip
+RUN apt-get update && apt-get -y install vim nano g++-multilib git python curl build-essential debhelper zip
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 ENV PATH="/depot_tools:${PATH}"
