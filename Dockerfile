@@ -16,12 +16,12 @@ WORKDIR /dart-sdk
 ARG dart_version=1.24.3
 RUN git clone https://github.com/dart-lang/sdk.git -b $dart_version
 
-RUN gclient config --name=sdk --unmanaged git@github.com:dart-lang/sdk.git 
-RUN gclient sync
+RUN gclient config --name=sdk --unmanaged git@github.com:dart-lang/sdk.git \
+ && gclient sync
 
 WORKDIR sdk
-RUN ./tools/gn.py -m release -a armv6 -t armv6=/build_cross_toolchain_raspberry/armv6-rpi-linux-gnueabihf/bin/armv6-rpi-linux-gnueabihf- --arm-float-abi hard --no-goma
-RUN ./tools/build.py -m release -a armv6 create_sdk
+RUN ./tools/gn.py -m release -a armv6 -t armv6=/build_cross_toolchain_raspberry/armv6-rpi-linux-gnueabihf/bin/armv6-rpi-linux-gnueabihf- --arm-float-abi hard --no-goma \
+ && ./tools/build.py -m release -a armv6 create_sdk
 WORKDIR out/ReleaseXARMV6/
 RUN zip -r /dart-sdk.zip dart-sdk
 
