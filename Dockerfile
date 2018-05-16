@@ -22,5 +22,6 @@ RUN gclient sync
 WORKDIR sdk
 RUN ./tools/gn.py -m release -a armv6 -t armv6=/build_cross_toolchain_raspberry/armv6-rpi-linux-gnueabihf/bin/armv6-rpi-linux-gnueabihf- --arm-float-abi hard --no-goma
 RUN ./tools/build.py -m release -a armv6 create_sdk
-RUN zip -r /dart-sdk.zip /dart-sdk/sdk/out/ReleaseXARMV6/dart-sdk
+WORKDIR out/ReleaseXARMV6/
+RUN zip -r /dart-sdk.zip dart-sdk
 
