@@ -5,14 +5,14 @@ Simply build the docker image:
 docker build .
 ```
 
-By default it will build version 1.24.3.
+By default it will build version 2.0.0-dev.55.0.
 
 To build another version, pass it as an argument:
 ```
 docker build --build-arg dart_version=VERSION .
 ```
 
-Bear in mind that I made this Dockerfile mainly to build 1.24.3 which is the last known version for me that is buildable for armv6.
+It is recommended to set Docker to have 3 GB of memory, otherwise g++ will fail to compile.
 
 ## How to retrieve the built dart sdk
 
