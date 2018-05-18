@@ -1,0 +1,6 @@
+.git
+.gitignore
+.circleci
+README.md
+test/
+
