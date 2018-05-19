@@ -20,8 +20,6 @@ jobs:
           name: Build Docker image with dart-vm binary
           command: |
             docker build  --build-arg dart_version=$TAG --tag $DOCKER_REPO:$TAG .
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push $DOCKER_REPO:$TAG
 
       - run:
           name: Upload Docker image to Hub
