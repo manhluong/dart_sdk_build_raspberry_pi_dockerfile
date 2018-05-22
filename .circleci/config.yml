@@ -1,39 +1,84 @@
+_defaults: &defaults
+  docker:
+    - image: luongbui/debian_stretch_docker:17.05.0-ce
+  environment:
+    DOCKER_REPO: "luongbui/dart-vm_armv6"
+    TAG: "2.0.0-dev.55.0"
+
+_restore_docker_cache: &restore_docker_cache
+  restore_cache:
+      keys: 
+        - &docker_cache_key docker-cache-key
+
 version: 2
 jobs:
 
   build:
-
-    docker:
-      - image: luongbui/debian_stretch_docker:17.05.0-ce
-
-    environment:
-      DOCKER_REPO: "luongbui/dart-vm_armv6"
-      TAG: "2.0.0-dev.55.0"
-
+    <<: *defaults
     steps:
-
       - checkout
-
       - setup_remote_docker
-
       - run:
           name: Build Docker image with dart-vm binary
           command: |
             docker build  --build-arg dart_version=$TAG --tag $DOCKER_REPO:$TAG .
+            mkdir -p docker-cache
+            docker save -o docker-cache/image.tar $DOCKER_REPO:$TAG
+      - save_cache:
+          key: *docker_cache_key
+          paths:
+            - docker-cache
 
+  upload_hub:
+    <<: *defaults
+    steps:
+      - *restore_docker_cache
+      - setup_remote_docker
       - run:
           name: Upload Docker image to Hub
           command: |
+            docker load < docker-cache/image.tar
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push $DOCKER_REPO:$TAG
 
+  extract:
+    <<: *defaults
+    steps:
+      - *restore_docker_cache
+      - setup_remote_docker
       - run:
-          name: Copy /dart-sdk.zip to /tmp/
+          name: Copy /dart-sdk.zip to /output/
           command: |
+            mkdir -p /output
+            docker load < docker-cache/image.tar
             CONTAINER_ID=$(docker create $DOCKER_REPO:$TAG)
-            docker cp $CONTAINER_ID:/dart-sdk.zip /tmp/dart-sdk.zip
+            docker cp $CONTAINER_ID:/dart-sdk.zip /output/dart-sdk.zip
+      - persist_to_workspace:
+          root: /output
+          paths:
+            - dart-sdk.zip
 
+  store:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /output
       - store_artifacts:
-          path: /tmp/dart-sdk.zip
-          destination: binaries
+          path: /output/dart-sdk.zip
+
+workflows:  
+  version: 2
+  build_upload_extract_and_store:
+    jobs:
+      - build
+      - upload_hub:
+          requires:
+            - build
+      - extract:
+          requires:
+            - build
+      - store:
+          requires:
+            - extract
+
 
