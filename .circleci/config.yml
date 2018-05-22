@@ -26,3 +26,14 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push $DOCKER_REPO:$TAG
+
+      - run:
+          name: Copy /dart-sdk.zip to /tmp/
+          command: |
+            CONTAINER_ID=$(docker create $DOCKER_REPO:$TAG)
+            docker cp $CONTAINER_ID:/dart-sdk.zip /tmp/dart-sdk.zip
+
+      - store_artifacts:
+          path: /tmp/dart-sdk.zip
+          destination: binaries
+
