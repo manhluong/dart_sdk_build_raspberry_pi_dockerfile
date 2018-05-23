@@ -16,6 +16,8 @@ It is recommended to set Docker to have 3 GB of memory, otherwise g++ will fail 
 
 ## How to retrieve the built dart sdk
 
+You can find a zip with the binaries in this repository, under the 'output' folder.
+
 You can find a Docker image with the binaries inside, [here](https://hub.docker.com/r/luongbui/dart-vm_armv6/).
 
 If you build the image yourself, the created image will contain a zip file with the dart binaries.
